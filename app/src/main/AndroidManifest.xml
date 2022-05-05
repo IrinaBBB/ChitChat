@@ -10,20 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChitChat">
         <activity
-            android:name=".login.LoginActivity"
-            android:exported="true" >
+            android:name=".login.SignupActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".login.LoginActivity"
+            android:exported="false">
 
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

@@ -5,4 +5,8 @@
     <string name="enter_password">Enter password</string>
     <string name="login">Login</string>
     <string name="rest_password">Rest Password</string>
+    <string name="invalid_email_format">Invalid email format</string>
+    <string name="enter_name">Enter name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="signup">Sign Up</string>
 </resources>
