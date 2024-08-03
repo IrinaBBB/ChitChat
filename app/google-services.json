@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "274259189912",
-    "project_id": "chitchat-bcfec",
-    "storage_bucket": "chitchat-bcfec.appspot.com"
+    "project_number": "448499335370",
+    "project_id": "chitchat-9cf86",
+    "storage_bucket": "chitchat-9cf86.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:274259189912:android:6f1bcba2533f08e4cef0ed",
+        "mobilesdk_app_id": "1:448499335370:android:36640a5697226549df7433",
         "android_client_info": {
           "package_name": "ru.irinavb.chitchat"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "274259189912-popa4e5cjqmd240ehuaruc436rf96a28.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ru.irinavb.chitchat",
-            "certificate_hash": "25ab9127d693d4996d839569449758c2a8fb2c3e"
-          }
-        },
-        {
-          "client_id": "274259189912-6vkuu4d4g29rbjtimf2edqdm0vukha82.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDGH9IeZUBYhm6J_cXKQZcALWgHMsQzXlk"
+          "current_key": "AIzaSyCPVmJ9m2Lx9p7d8m5KRtcvu_H2TjS7upk"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "274259189912-6vkuu4d4g29rbjtimf2edqdm0vukha82.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

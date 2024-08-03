@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import ru.irinavb.chitchat.R
 import ru.irinavb.chitchat.databinding.ActivityLoginBinding
 import ru.irinavb.chitchat.util.Validation
 
@@ -37,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
             firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-
+                        Toast.makeText(this, "Successfully logged in", Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(
                             this@LoginActivity,
