@@ -9,4 +9,9 @@
     <string name="enter_name">Enter name</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="signup">Sign Up</string>
+    <string name="enter_confirm_password">Enter confirm password</string>
+    <string name="enter_correct_email">Enter correct email\n</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="don_t_have_account_yet">Don\'t have account yet?</string>
+    <string name="register_here">Register here</string>
 </resources>

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChitChat">
         <activity
-            android:name=".login.SignupActivity"
+            android:name=".signup.SignupActivity"
             android:exported="true">
 
         </activity>
@@ -22,7 +22,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".MainActivity"

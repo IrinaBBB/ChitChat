@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="ru.irinavb.chitchat" />
+                  <option name="mobileSdkAppId" value="1:448499335370:android:36640a5697226549df7433" />
+                  <option name="projectId" value="chitchat-9cf86" />
+                  <option name="projectNumber" value="448499335370" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

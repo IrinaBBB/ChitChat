@@ -1,11 +1,13 @@
 package ru.irinavb.chitchat.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import ru.irinavb.chitchat.databinding.ActivityLoginBinding
+import ru.irinavb.chitchat.signup.SignupActivity
 import ru.irinavb.chitchat.util.Validation
 
 class LoginActivity : AppCompatActivity() {
@@ -21,13 +23,19 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    fun goToRegister(v: View) {
+        startActivity(Intent(this@LoginActivity, SignupActivity::class.java))
+    }
+
     fun btnLoginClick(v: View) {
         email = binding.etEmail.text.toString().trim()
         password = binding.etPassword.text.toString().trim()
 
-        Validation.validateEmail(context = this, textInputLayout = binding.tilEmail,  email = email)
-        Validation.validatePasswordForLogin(context = this, textInputLayout = binding
-            .tilPassword,  password = password)
+        Validation.validateEmail(context = this, textInputLayout = binding.tilEmail, email = email)
+        Validation.validatePasswordForLogin(
+            context = this, textInputLayout = binding
+                .tilPassword, password = password
+        )
 
         if (binding.tilEmail.error.isNullOrEmpty() &&
             binding.tilPassword.error.isNullOrEmpty()
