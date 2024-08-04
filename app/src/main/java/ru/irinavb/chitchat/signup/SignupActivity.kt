@@ -2,15 +2,12 @@ package ru.irinavb.chitchat.signup
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresExtension
 import androidx.appcompat.app.AppCompatActivity
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseAuth
@@ -25,166 +22,146 @@ import ru.irinavb.chitchat.common.NodeNames
 import ru.irinavb.chitchat.databinding.ActivitySignupBinding
 import ru.irinavb.chitchat.login.LoginActivity
 
-
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
-
-    private lateinit var email: String
-    private lateinit var name: String
-    private lateinit var password: String
-    private lateinit var confirmPassword: String
-
     private lateinit var user: FirebaseUser
     private lateinit var databaseReference: DatabaseReference
-    private lateinit var  storageReference: StorageReference
+    private lateinit var storageReference: StorageReference
     private var localFileUri: Uri? = null
     private lateinit var serverFileUri: Uri
+
+    private val imagePickerLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            localFileUri = result.data?.data
+            binding.ivProfile.setImageURI(localFileUri)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
         storageReference = FirebaseStorage.getInstance().reference
-
     }
 
-    fun pickImage(view: View) {
-        Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
+    fun pickImage(v: View) {
         ImagePicker.with(this)
-            .crop()	    			//Crop image(Optional), Check Customization for more option
-            .compress(1024)			//Final image size will be less than 1 MB(Optional)
-            .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
-            .start()
+            .crop()
+            .compress(1024)
+            .maxResultSize(1080, 1080)
+            .createIntent { intent -> imagePickerLauncher.launch(intent) }
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        localFileUri = data?.data
-        binding.ivProfile.setImageURI(data?.data)
-    }
+    fun btnSignupClick(v: View) {
+        val email = binding.etEmail.text.toString().trim()
+        val name = binding.etName.text.toString().trim()
+        val password = binding.etPassword.text.toString().trim()
+        val confirmPassword = binding.etConfirmPassword.text.toString().trim()
 
-    fun btnSignupClick(view: View) {
-        email = binding.etEmail.text.toString().trim()
-        name = binding.etName.text.toString().trim()
-        password = binding.etPassword.text.toString().trim()
-        confirmPassword = binding.etConfirmPassword.text.toString().trim()
+        when {
+            email.isEmpty() -> binding.etEmail.error = getString(R.string.enter_email)
+            name.isEmpty() -> binding.etName.error = getString(R.string.enter_name)
+            password.isEmpty() -> binding.etPassword.error = getString(R.string.enter_password)
+            confirmPassword.isEmpty() -> binding.etConfirmPassword.error =
+                getString(R.string.enter_confirm_password)
 
-        if (email == "") {
-            binding.etEmail.error = R.string.enter_email.toString()
-        } else if (name == "") {
-            binding.etName.error = R.string.enter_name.toString()
-        } else if (password == "") {
-            binding.etPassword.error = R.string.enter_password.toString()
-        } else if (confirmPassword == "") {
-            binding.etPassword.error = R.string.enter_confirm_password.toString()
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.etEmail.error = R.string.enter_correct_email.toString()
-        } else if (password != confirmPassword) {
-            binding.etPassword.error = R.string.passwords_do_not_match.toString()
-        } else {
-            val firebaseAuth = FirebaseAuth.getInstance()
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        user = firebaseAuth.currentUser!!
-                        if(localFileUri != null) {
-                            updateUserInfoAndPhoto()
-                        } else {
-                            updateUserInfo()
-                        }
-                    } else {
-                        Toast.makeText(
-                            this@SignupActivity,
-                            "Registration Failed: ${task.exception}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> binding.etEmail.error =
+                getString(R.string.enter_correct_email)
+
+            password != confirmPassword -> binding.etConfirmPassword.error =
+                getString(R.string.passwords_do_not_match)
+
+            else -> createAccount(email, password, name)
         }
     }
 
-    private fun updateUserInfo() {
+    private fun createAccount(email: String, password: String, name: String) {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    user = firebaseAuth.currentUser!!
+                    if (localFileUri != null) {
+                        updateUserInfoAndPhoto(name)
+                    } else {
+                        updateUserInfo(name)
+                    }
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Registration Failed: ${task.exception?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+    }
+
+    private fun updateUserInfo(name: String) {
         val request = UserProfileChangeRequest.Builder()
-            .setDisplayName(binding.etName.toString().trim())
+            .setDisplayName(name)
             .build()
+
         user.updateProfile(request).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val userId = user.uid
-                databaseReference = FirebaseDatabase.getInstance().reference.child(NodeNames.USERS)
-                val hashMap = HashMap<String, String>()
-                hashMap[NodeNames.NAME] = binding.etName.text.toString().trim()
-                hashMap[NodeNames.EMAIL] = binding.etEmail.text.toString().trim()
-                hashMap[NodeNames.ONLINE] = "true"
-                hashMap[NodeNames.PHOTO] = ""
-                databaseReference.child(userId).setValue(hashMap).addOnCompleteListener {
-                    Toast.makeText(this, "Successfully created user", Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
-
-                }
+                saveUserToDatabase(name, null)
             } else {
-                Toast.makeText(
-                    this,
-                    "Failed to update profile: ${task.exception}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                showError("Failed to update profile: ${task.exception?.message}")
             }
         }
     }
 
-    private fun updateUserInfoAndPhoto() {
-        val fileName = user.uid + ".jpg"
-        val storageReference = storageReference.child("images/$fileName")
-        localFileUri?.let { storageReference.putFile(it) }?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                storageReference.downloadUrl.addOnSuccessListener {uri ->
-                    serverFileUri = uri
-                    val request = UserProfileChangeRequest.Builder()
-                        .setDisplayName(binding.etName.toString().trim())
-                        .setPhotoUri(serverFileUri)
-                        .build()
-                    user.updateProfile(request).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val userId = user.uid
-                            databaseReference = FirebaseDatabase.getInstance().reference.child(NodeNames.USERS)
-                            val hashMap = HashMap<String, String>()
-                            hashMap[NodeNames.NAME] = binding.etName.text.toString().trim()
-                            hashMap[NodeNames.EMAIL] = binding.etEmail.text.toString().trim()
-                            hashMap[NodeNames.ONLINE] = "true"
-                            hashMap[NodeNames.PHOTO] = serverFileUri.path.toString()
-                            databaseReference.child(userId).setValue(hashMap).addOnCompleteListener {
-                                Toast.makeText(this, "Successfully created user", Toast.LENGTH_LONG).show()
-                                startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+    private fun updateUserInfoAndPhoto(name: String) {
+        val fileName = "${user.uid}.jpg"
+        val storageRef = storageReference.child("images/$fileName")
+
+        localFileUri?.let { uri ->
+            storageRef.putFile(uri).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+                        serverFileUri = uri
+                        val request = UserProfileChangeRequest.Builder()
+                            .setDisplayName(name)
+                            .setPhotoUri(serverFileUri)
+                            .build()
+
+                        user.updateProfile(request).addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                saveUserToDatabase(name, serverFileUri.toString())
+                            } else {
+                                showError("Failed to update profile: ${task.exception?.message}")
                             }
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "Failed to update profile: ${task.exception}",
-                                Toast.LENGTH_SHORT
-                            ).show()
                         }
                     }
                 }
             }
         }
     }
+
+    private fun saveUserToDatabase(name: String, photoUrl: String?) {
+        val userId = user.uid
+        databaseReference = FirebaseDatabase.getInstance().reference.child(NodeNames.USERS)
+
+        val userMap = mapOf(
+            NodeNames.NAME to name,
+            NodeNames.EMAIL to binding.etEmail.text.toString().trim(),
+            NodeNames.ONLINE to true.toString(),
+            NodeNames.PHOTO to (photoUrl ?: "")
+        )
+
+        databaseReference.child(userId).setValue(userMap).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "Successfully created user", Toast.LENGTH_LONG).show()
+                startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+            } else {
+                showError("Failed to save user data: ${task.exception?.message}")
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
