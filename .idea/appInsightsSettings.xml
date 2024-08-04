@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="ru.irinavb.chitchat" />
-                  <option name="mobileSdkAppId" value="1:448499335370:android:36640a5697226549df7433" />
-                  <option name="projectId" value="chitchat-9cf86" />
-                  <option name="projectNumber" value="448499335370" />
+                  <option name="mobileSdkAppId" value="1:22562351895:android:849e9c954f70f050ade552" />
+                  <option name="projectId" value="chitchatdb-e3819" />
+                  <option name="projectNumber" value="22562351895" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
