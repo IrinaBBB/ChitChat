@@ -19,4 +19,7 @@
     <string name="change_picture">Change Picture</string>
     <string name="remove_picture">Remove Picture</string>
     <string name="profile">Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
 </resources>

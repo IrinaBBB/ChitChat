@@ -24,6 +24,7 @@ import ru.irinavb.chitchat.R
 import ru.irinavb.chitchat.common.NodeNames
 import ru.irinavb.chitchat.databinding.ActivityProfileBinding
 import ru.irinavb.chitchat.login.LoginActivity
+import ru.irinavb.chitchat.password.ChangePasswordActivity
 
 @Suppress("NAME_SHADOWING")
 class ProfileActivity : AppCompatActivity() {
@@ -74,7 +75,6 @@ class ProfileActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_profile, menu)
         return super.onCreateOptionsMenu(menu)
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menuLogout) {
             btnLogOutClick()
@@ -239,6 +239,11 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun btnChangePasswordClick(v: View) {
+        startActivity(Intent(this, ChangePasswordActivity::class.java))
+        finish()
     }
 
     private fun showError(message: String) {

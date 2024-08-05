@@ -6,7 +6,7 @@
         android:id="@+id/menuProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/ic_profile"
+        android:icon="@drawable/ic_user_default"
         android:title="@string/profile"
         app:showAsAction="ifRoom" />
 </menu>

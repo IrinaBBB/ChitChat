@@ -14,11 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChitChat">
         <activity
+            android:name=".password.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".profile.ProfileActivity"
             android:exported="true" />
         <activity
             android:name=".signup.SignupActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".login.LoginActivity"
             android:exported="true">
