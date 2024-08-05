@@ -31,6 +31,13 @@ class SignupActivity : AppCompatActivity() {
     private var localFileUri: Uri? = null
     private lateinit var serverFileUri: Uri
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivitySignupBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        storageReference = FirebaseStorage.getInstance().reference
+    }
+
     private val imagePickerLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -38,13 +45,6 @@ class SignupActivity : AppCompatActivity() {
             localFileUri = result.data?.data
             binding.ivProfile.setImageURI(localFileUri)
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        storageReference = FirebaseStorage.getInstance().reference
     }
 
     fun pickImage(v: View) {
@@ -145,7 +145,7 @@ class SignupActivity : AppCompatActivity() {
         databaseReference = FirebaseDatabase.getInstance().reference.child(NodeNames.USERS)
 
         val userMap = mapOf(
-            NodeNames.NAME to name,
+            NodeNames.NAME to binding.etName.text.toString().trim(),
             NodeNames.EMAIL to binding.etEmail.text.toString().trim(),
             NodeNames.ONLINE to true.toString(),
             NodeNames.PHOTO to (photoUrl ?: "")

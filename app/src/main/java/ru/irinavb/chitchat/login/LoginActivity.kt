@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import ru.irinavb.chitchat.MainActivity
 import ru.irinavb.chitchat.databinding.ActivityLoginBinding
 import ru.irinavb.chitchat.signup.SignupActivity
 import ru.irinavb.chitchat.util.Validation
@@ -45,6 +46,8 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Successfully logged in", Toast.LENGTH_LONG).show()
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
                     } else {
                         Toast.makeText(
                             this@LoginActivity,

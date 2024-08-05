@@ -60,4 +60,7 @@ dependencies {
 
     // Image Picker
     implementation("com.github.dhaval2404:imagepicker:2.1")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
